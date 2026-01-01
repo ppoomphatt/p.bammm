@@ -14,136 +14,41 @@
             --dark-pink: #ff8fab;
             --soft-blue: #a2d2ff;
         }
-
         body {
             background: linear-gradient(135deg, #ffe5ec 0%, #fb6f92 100%);
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Kanit', sans-serif;
-            overflow: hidden;
-            text-align: center;
+            margin: 0; height: 100vh;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            font-family: 'Kanit', sans-serif; overflow: hidden; text-align: center;
         }
-
-        #video {
-            position: absolute;
-            opacity: 0;
-            width: 1px;
-            height: 1px;
-        }
-
+        #video { position: absolute; opacity: 0; width: 1px; height: 1px; }
         #status-box {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 15px 30px;
-            border-radius: 50px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            min-width: 280px;
-            border: 3px solid white;
-            z-index: 10;
+            background: rgba(255, 255, 255, 0.9); padding: 15px 30px;
+            border-radius: 50px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px; min-width: 280px; border: 3px solid white; z-index: 10;
         }
-
-        #status-text {
-            color: var(--dark-pink);
-            font-size: 1.2rem;
-            margin: 0;
-        }
-
-        #gift-wrapper {
-            position: relative;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.3s ease;
-        }
-
-        #gift-container {
-            font-size: 150px;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
-        }
-
+        #status-text { color: var(--dark-pink); font-size: 1.2rem; margin: 0; }
+        #gift-wrapper { position: relative; cursor: pointer; user-select: none; }
+        #gift-container { font-size: 150px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         #lock-status {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 50px;
-            display: none;
-            filter: drop-shadow(0 4px 5px rgba(0,0,0,0.2));
-            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: absolute; top: -10px; right: -10px; font-size: 50px;
+            display: none; animation: bounceIn 0.6s forwards;
         }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .shake {
-            animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: rotate(0deg); }
-            20% { transform: rotate(-15deg); }
-            40% { transform: rotate(15deg); }
-            60% { transform: rotate(-10deg); }
-            80% { transform: rotate(10deg); }
-        }
-
+        @keyframes bounceIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        .shake { animation: shake 0.5s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(-15deg); } 40% { transform: rotate(15deg); } }
         #popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            width: 85%;
-            max-width: 380px;
-            padding: 30px;
-            border-radius: 40px;
-            box-shadow: 0 25px 70px rgba(0,0,0,0.4);
-            z-index: 100;
-            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; width: 85%; max-width: 380px; padding: 30px;
+            border-radius: 40px; box-shadow: 0 25px 70px rgba(0,0,0,0.4); z-index: 100;
             border: 6px solid var(--primary-pink);
         }
-
-        @keyframes popIn {
-            from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-
-        .flower-img { 
-            width: 200px; 
-            height: auto;
-            border-radius: 20px;
-            margin-bottom: 15px; 
-        }
-
-        .spotify-img { 
-            width: 100%; 
-            border-radius: 15px; 
-            margin-top: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
+        .flower-img { width: 200px; border-radius: 20px; }
+        .spotify-img { width: 100%; border-radius: 15px; margin-top: 20px; }
         button {
-            background: var(--dark-pink);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            margin-top: 25px;
-            cursor: pointer;
-            font-family: 'Kanit';
-            font-weight: bold;
-            font-size: 1rem;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background: #ff4d6d;
+            background: var(--dark-pink); color: white; border: none;
+            padding: 12px 30px; border-radius: 25px; margin-top: 25px;
+            cursor: pointer; font-family: 'Kanit'; font-weight: bold;
         }
     </style>
 </head>
@@ -152,7 +57,7 @@
     <video id="video" autoplay muted playsinline></video>
 
     <div id="status-box">
-        <p id="status-text">กำลังเตรียมความลับ... ✨</p>
+        <p id="status-text">กำลังเริ่มระบบความรัก... ✨</p>
     </div>
 
     <div id="gift-wrapper" onclick="handleGiftClick()">
@@ -161,10 +66,10 @@
     </div>
 
     <div id="popup">
-        <img src="https://i.postimg.cc/FzCg2kdZ/S-25944071.jpg" class="flower-img" alt="Bouquet">
-        <h2 style="color: #ff4d6d; margin: 10px 0 0 0;">For You! 💐</h2>
-        <p style="margin-top: 5px;">ยิ้มเก่งจัง มีรางวัลมาให้ฟังค่ะ 😊</p>
-        <img src="https://i.postimg.cc/PrKB5SYk/S-25944070.jpg" class="spotify-img" alt="Spotify Code">
+        <img src="https://i.postimg.cc/FzCg2kdZ/S-25944071.jpg" class="flower-img">
+        <h2 style="color: #ff4d6d;">For You! 💐</h2>
+        <p>ยิ้มเก่งจัง มีรางวัลมาให้ฟังค่ะ 😊</p>
+        <img src="https://i.postimg.cc/PrKB5SYk/S-25944070.jpg" class="spotify-img">
         <br>
         <button onclick="location.reload()">เล่นอีกรอบ</button>
     </div>
@@ -178,21 +83,20 @@
         const lockIcon = document.getElementById('lock-status');
         const popup = document.getElementById('popup');
 
-        // 1. โหลด Model AI
         async function init() {
             const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
             try {
                 statusText.innerText = "กำลังโหลด AI... ✨";
+                // รอให้ faceapi โหลดโมเดลให้เสร็จก่อน
                 await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
                 await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
-                statusText.innerText = "กดที่กล่องเพื่อดูความลับ... 🎁";
+                statusText.innerText = "กดที่กล่องเพื่อเริ่มความลับ... 🎁";
             } catch (e) {
-                statusText.innerText = "โหลด AI ไม่สำเร็จ กรุณารีเฟรชหน้าจอ";
-                console.error("Model Load Error:", e);
+                statusText.innerText = "โหลด AI ล้มเหลว กรุณารีเฟรช";
+                console.error(e);
             }
         }
 
-        // 2. ฟังก์ชันเริ่มเปิดกล้อง
         async function startCamera() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
@@ -200,45 +104,31 @@
                 isCameraStarted = true;
                 detectSmile();
             } catch (err) {
-                statusText.innerText = "กรุณาอนุญาตให้ใช้กล้องเพื่อเล่นนะคะ";
+                statusText.innerText = "อนุญาตกล้องด้วยนะคนดี";
             }
         }
 
-        // 3. คลิกที่กล่อง
         function handleGiftClick() {
             if (!isUnlocked) {
                 gift.classList.add('shake');
                 setTimeout(() => gift.classList.remove('shake'), 500);
                 statusText.innerText = "ยิ้มหวานๆ ให้กล่องหน่อยนะ 😊";
-                if (!isCameraStarted) {
-                    startCamera();
-                }
+                if (!isCameraStarted) startCamera();
             } else {
                 gift.innerText = "📦✨";
                 popup.style.display = 'block';
-                statusText.innerText = "ของขวัญถูกเปิดแล้ว! 💖";
             }
         }
 
-        // 4. ตรวจจับการยิ้ม
         async function detectSmile() {
-            if (typeof faceapi === 'undefined') return;
-
             setInterval(async () => {
-                if (!isUnlocked && isCameraStarted) {
-                    const detections = await faceapi.detectAllFaces(
-                        video, 
-                        new faceapi.TinyFaceDetectorOptions()
-                    ).withFaceExpressions();
-
-                    if (detections && detections.length > 0) {
+                if (!isUnlocked && isCameraStarted && typeof faceapi !== 'undefined') {
+                    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+                    if (detections.length > 0) {
                         const happiness = detections[0].expressions.happy;
-                        console.log("Happiness level:", happiness);
-
-                        // ปรับให้ยิ้มง่ายขึ้นที่ 0.5
-                        if (happiness > 0.5) {
+                        if (happiness > 0.5) { // ยิ้มแค่ 50% ก็ผ่านแล้วครับ
                             isUnlocked = true;
-                            statusText.innerText = "ปลดล็อคแล้ว! กดเปิดกล่องอีกครั้งสิ ✨";
+                            statusText.innerText = "ปลดล็อคแล้ว! กดที่กล่องอีกครั้งสิ ✨";
                             lockIcon.style.display = 'block';
                             gift.style.transform = "scale(1.2)";
                         }
@@ -247,7 +137,6 @@
             }, 500);
         }
 
-        // เริ่มทำงาน
         init();
     </script>
 </body>
