@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gift for You 😊</title>
     
-    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&display=swap" rel="stylesheet">
-
+   <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-pink: #ffafcc;
@@ -256,6 +255,52 @@
 
         // เริ่มต้นการโหลด AI
         init();
-    </script>
+    </script>async function init() {
+    // เปลี่ยนมาใช้ CDN ที่เสถียรกว่าเดิม
+    const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
+    
+    try {
+        statusText.innerText = "กำลังโหลดโมเดล AI... ✨";
+        
+        // โหลด Model ให้เสร็จก่อนทำอย่างอื่น
+        await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+        await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
+        
+        statusText.innerText = "กดที่กล่องเพื่อเริ่มความลับ... 🎁";
+        console.log("AI Models Loaded!");
+    } catch (e) {
+        statusText.innerText = "โหลด AI ล้มเหลว กรุณารีเฟรชหน้าจอ";
+        console.error("Model Load Error:", e);
+    }
+}
+
+async function detectSmile() {
+    // เพิ่มการตรวจสอบว่า faceapi โหลดเสร็จหรือยัง
+    if (typeof faceapi === 'undefined') return;
+
+    setInterval(async () => {
+        if (!isUnlocked && isCameraStarted) {
+            // ใช้ TinyFaceDetector ตามที่โหลดมา
+            const detections = await faceapi.detectAllFaces(
+                video, 
+                new faceapi.TinyFaceDetectorOptions()
+            ).withFaceExpressions();
+
+            if (detections && detections.length > 0) {
+                const happiness = detections[0].expressions.happy;
+                console.log("Happiness level:", happiness); // ดูค่าการยิ้มใน Console
+
+                // ปรับให้ยิ้มง่ายขึ้นที่ 0.5 (50%)
+                if (happiness > 0.5) {
+                    isUnlocked = true;
+                    statusText.innerText = "ปลดล็อคแล้ว! กดเปิดกล่องอีกครั้งสิ ✨";
+                    lockIcon.style.display = 'block';
+                    gift.style.transform = "scale(1.2)";
+                }
+            }
+        }
+    }, 500); // ปรับเวลาเป็น 0.5 วินาทีต่อการสแกนเพื่อลดภาระเครื่อง
+}
 </body>
+
 </html>
