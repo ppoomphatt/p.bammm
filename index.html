@@ -37,19 +37,51 @@
         @keyframes bounceIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
         .shake { animation: shake 0.5s ease-in-out; }
         @keyframes shake { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(-15deg); } 40% { transform: rotate(15deg); } }
+        
+        /* แก้ไขส่วน Popup ให้สวยงาม */
         #popup {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; width: 85%; max-width: 380px; padding: 30px;
-            border-radius: 40px; box-shadow: 0 25px 70px rgba(0,0,0,0.4); z-index: 100;
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%);
+            background: white; 
+            width: 85%; 
+            max-width: 380px; 
+            padding: 25px;
+            border-radius: 40px; 
+            box-shadow: 0 25px 70px rgba(0,0,0,0.4); 
+            z-index: 100;
             border: 6px solid var(--primary-pink);
+            box-sizing: border-box; /* ป้องกันกล่องขยายเกินขนาด */
         }
-        .flower-img { width: 200px; border-radius: 20px; }
-        .spotify-img { width: 100%; border-radius: 15px; margin-top: 20px; }
+        
+        /* แก้ไขรูปภาพให้พอดีกล่อง */
+        .flower-img { 
+            width: 100%; 
+            max-width: 250px; 
+            height: auto; 
+            border-radius: 20px; 
+            margin: 0 auto 15px auto;
+            display: block;
+        }
+        
+        .spotify-img { 
+            width: 100%; 
+            max-width: 280px;
+            height: auto;
+            border-radius: 15px; 
+            margin: 15px auto; 
+            display: block;
+        }
+
         button {
             background: var(--dark-pink); color: white; border: none;
-            padding: 12px 30px; border-radius: 25px; margin-top: 25px;
+            padding: 12px 30px; border-radius: 25px; margin-top: 10px;
             cursor: pointer; font-family: 'Kanit'; font-weight: bold;
+            transition: 0.3s;
         }
+        button:hover { transform: scale(1.1); background: #ff4d6d; }
     </style>
 </head>
 <body>
@@ -66,11 +98,10 @@
     </div>
 
     <div id="popup">
-        <img src="https://i.postimg.cc/XYVJmN6b/Gemini-Generated-Image-love7ylove7ylove.png">
-        <h2 style="color: #ff4d6d;">𝖿𝗈𝗋 𝗒𝗈𝗎! 💐</h2>
-        <p>ยิ้มหวานเกิ้น มีรางวัลมาให้ฟังคับบ(^o^)</p>
+        <img src="https://i.postimg.cc/XYVJmN6b/Gemini-Generated-Image-love7ylove7ylove.png" class="flower-img">
+        <h2 style="color: #ff4d6d; margin: 10px 0;">𝖿𝗈𝗋 𝗒𝗈𝗎! 💐</h2>
+        <p style="margin: 5px 0;">ยิ้มหวานเกิ้น มีรางวัลมาให้ฟังคับบ(^o^)</p>
         <img src="https://i.postimg.cc/PrKB5SYk/S-25944070.jpg" class="spotify-img">
-        <br>
         <button onclick="location.reload()">เล่นอีกรอบ</button>
     </div>
 
@@ -87,7 +118,6 @@
             const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
             try {
                 statusText.innerText = "กำลังโหลด AI... ✨";
-                // รอให้ faceapi โหลดโมเดลให้เสร็จก่อน
                 await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
                 await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
                 statusText.innerText = "กดที่กล่องเพื่อเริ่มความลับ... 🎁";
@@ -112,7 +142,7 @@
             if (!isUnlocked) {
                 gift.classList.add('shake');
                 setTimeout(() => gift.classList.remove('shake'), 500);
-                statusText.innerText = "ยิ้มหวานๆ ให้กล้องหน่อยคับ(⁠•⁠‿⁠•⁠)";
+                statusText.innerText = "ยิ้มหวานๆ ให้กล่องหน่อยคับ(⁠•⁠‿⁠•⁠)";
                 if (!isCameraStarted) startCamera();
             } else {
                 gift.innerText = "📦✨";
@@ -126,7 +156,7 @@
                     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                     if (detections.length > 0) {
                         const happiness = detections[0].expressions.happy;
-                        if (happiness > 0.5) { // ยิ้มแค่ 50% ก็ผ่านแล้วครับ
+                        if (happiness > 0.5) {
                             isUnlocked = true;
                             statusText.innerText = "ปลดล็อคแล้ว! กดที่กล่องอีกครั้งสิ ✨";
                             lockIcon.style.display = 'block';
@@ -141,4 +171,3 @@
     </script>
 </body>
 </html>
-
