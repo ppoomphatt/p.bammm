@@ -37,7 +37,6 @@
         .shake { animation: shake 0.5s ease-in-out; }
         @keyframes shake { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(-15deg); } 40% { transform: rotate(15deg); } }
         
-        /* แก้ไขส่วน Popup ให้สวยงาม */
         #popup {
             display: none; 
             position: fixed; 
@@ -45,32 +44,32 @@
             left: 50%; 
             transform: translate(-50%, -50%);
             background: white; 
-            width: 85%; 
+            width: 90%; 
             max-width: 380px; 
-            padding: 25px;
+            padding: 20px;
             border-radius: 40px; 
             box-shadow: 0 25px 70px rgba(0,0,0,0.4); 
             z-index: 100;
             border: 6px solid var(--primary-pink);
-            box-sizing: border-box; /* ป้องกันกล่องขยายเกินขนาด */
+            box-sizing: border-box; /* ป้องกันกล่องบวมล้นจอ */
         }
         
-        /* แก้ไขรูปภาพให้พอดีกล่อง */
         .flower-img { 
             width: 100%; 
-            max-width: 250px; 
+            max-width: 220px; 
             height: auto; 
             border-radius: 20px; 
-            margin: 0 auto 15px auto;
+            margin: 0 auto 10px auto;
             display: block;
         }
         
+        /* แก้ไขตรงนี้: คุมรูปเพลงไม่ให้หลุดขอบ */
         .spotify-img { 
-            width: 100%; 
-            max-width: 280px;
+            width: 100% !important; 
+            max-width: 300px;
             height: auto;
             border-radius: 15px; 
-            margin: 15px auto; 
+            margin: 10px auto; 
             display: block;
         }
 
@@ -80,7 +79,6 @@
             cursor: pointer; font-family: 'Kanit'; font-weight: bold;
             transition: 0.3s;
         }
-        button:hover { transform: scale(1.1); background: #ff4d6d; }
     </style>
 </head>
 <body>
@@ -88,7 +86,7 @@
     <video id="video" autoplay muted playsinline></video>
 
     <div id="status-box">
-        <p id="status-text">กำลังเริ่มระบบความรัก... ✨</p>
+        <p id="status-text">รอแปปปป✨</p>
     </div>
 
     <div id="gift-wrapper" onclick="handleGiftClick()">
@@ -98,9 +96,11 @@
 
     <div id="popup">
         <img src="https://i.postimg.cc/XYVJmN6b/Gemini-Generated-Image-love7ylove7ylove.png" class="flower-img">
-        <h2 style="color: #ff4d6d; margin: 10px 0;">𝖿𝗈𝗋 𝗒𝗈𝗎! 💐</h2>
+        <h2 style="color: #ff4d6d; margin: 5px 0;">𝖿𝗈𝗋 𝗒𝗈𝗎! 💐</h2>
         <p style="margin: 5px 0;">ยิ้มหวานเกิ้น มีเพลงมาให้ฟังคับบ(^o^)</p>
-        <img src="https://i.postimg.cc/GpnrfYgx/89494.png">
+        
+        <img src="https://i.postimg.cc/GpnrfYgx/89494.png" class="spotify-img">
+        
         <button onclick="location.reload()">เล่นอีกรอบ</button>
     </div>
 
@@ -116,13 +116,11 @@
         async function init() {
             const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
             try {
-                statusText.innerText = "รอแปปปป✨";
                 await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
                 await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
                 statusText.innerText = "กดเพื่อเปิดคับ🎁";
             } catch (e) {
-                statusText.innerText = "โหลดಥ⁠╭⁠╮⁠ಥล้มเหลว รีเฟรชหน่อยคับ";
-                console.error(e);
+                statusText.innerText = "โหลดล้มเหลว รีเฟรชหน่อยคับ";
             }
         }
 
@@ -155,6 +153,7 @@
                     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                     if (detections.length > 0) {
                         const happiness = detections[0].expressions.happy;
+                        // ตั้งค่าความง่ายในการยิ้มไว้ที่ 0.3 (ยิ้มนิดเดียวก็ติด)
                         if (happiness > 0.3) {
                             isUnlocked = true;
                             statusText.innerText = "ปลดล็อคแล้ว! กดเปิดเลยครับ ✨";
@@ -170,7 +169,3 @@
     </script>
 </body>
 </html>
-
-
-
-
