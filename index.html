@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gift for You 😊</title>
     
-   <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary-pink: #ffafcc;
@@ -27,7 +28,6 @@
             text-align: center;
         }
 
-        /* Video ซ่อนไว้ใช้ประมวลผล */
         #video {
             position: absolute;
             opacity: 0;
@@ -35,7 +35,6 @@
             height: 1px;
         }
 
-        /* ข้อความสถานะ */
         #status-box {
             background: rgba(255, 255, 255, 0.9);
             padding: 15px 30px;
@@ -53,7 +52,6 @@
             margin: 0;
         }
 
-        /* ส่วนแสดงผลกล่องของขวัญ */
         #gift-wrapper {
             position: relative;
             cursor: pointer;
@@ -62,7 +60,7 @@
         }
 
         #gift-container {
-            font-size: 150px; /* ขนาดกล่องของขวัญ */
+            font-size: 150px;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
@@ -82,7 +80,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* Animation สั่น */
         .shake {
             animation: shake 0.5s ease-in-out;
         }
@@ -95,7 +92,6 @@
             80% { transform: rotate(10deg); }
         }
 
-        /* Popup */
         #popup {
             display: none;
             position: fixed;
@@ -156,7 +152,7 @@
     <video id="video" autoplay muted playsinline></video>
 
     <div id="status-box">
-        <p id="status-text">กำลังโหลด AI... รอสักครู่นะคะ ✨</p>
+        <p id="status-text">กำลังเตรียมความลับ... ✨</p>
     </div>
 
     <div id="gift-wrapper" onclick="handleGiftClick()">
@@ -168,9 +164,7 @@
         <img src="https://i.postimg.cc/FzCg2kdZ/S-25944071.jpg" class="flower-img" alt="Bouquet">
         <h2 style="color: #ff4d6d; margin: 10px 0 0 0;">For You! 💐</h2>
         <p style="margin-top: 5px;">ยิ้มเก่งจัง มีรางวัลมาให้ฟังค่ะ 😊</p>
-        
         <img src="https://i.postimg.cc/PrKB5SYk/S-25944070.jpg" class="spotify-img" alt="Spotify Code">
-        
         <br>
         <button onclick="location.reload()">เล่นอีกรอบ</button>
     </div>
@@ -184,40 +178,21 @@
         const lockIcon = document.getElementById('lock-status');
         const popup = document.getElementById('popup');
 
-        // 1. โหลด Model AI จากอินเทอร์เน็ต
+        // 1. โหลด Model AI
         async function init() {
             const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
             try {
+                statusText.innerText = "กำลังโหลด AI... ✨";
                 await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
                 await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
                 statusText.innerText = "กดที่กล่องเพื่อดูความลับ... 🎁";
             } catch (e) {
                 statusText.innerText = "โหลด AI ไม่สำเร็จ กรุณารีเฟรชหน้าจอ";
-                console.error(e);
+                console.error("Model Load Error:", e);
             }
         }
 
-        // 2. Logic เมื่อมีการกดที่กล่อง
-        function handleGiftClick() {
-            if (!isUnlocked) {
-                // เอฟเฟกต์สั่น
-                gift.classList.add('shake');
-                setTimeout(() => gift.classList.remove('shake'), 500);
-                
-                statusText.innerText = "ยิ้มหวานๆ ให้กล่องหน่อยนะ 😊";
-                
-                if (!isCameraStarted) {
-                    startCamera();
-                }
-            } else {
-                // ถ้าปลดล็อคแล้ว (ยิ้มแล้ว) กดอีกครั้งจะแสดง Popup
-                gift.innerText = "📦✨";
-                popup.style.display = 'block';
-                statusText.innerText = "ของขวัญถูกเปิดแล้ว! 💖";
-            }
-        }
-
-        // 3. ฟังก์ชันเริ่มเปิดกล้อง
+        // 2. ฟังก์ชันเริ่มเปิดกล้อง
         async function startCamera() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
@@ -229,8 +204,26 @@
             }
         }
 
-        // 4. ฟังก์ชัน AI ตรวจจับการยิ้ม
+        // 3. คลิกที่กล่อง
+        function handleGiftClick() {
+            if (!isUnlocked) {
+                gift.classList.add('shake');
+                setTimeout(() => gift.classList.remove('shake'), 500);
+                statusText.innerText = "ยิ้มหวานๆ ให้กล่องหน่อยนะ 😊";
+                if (!isCameraStarted) {
+                    startCamera();
+                }
+            } else {
+                gift.innerText = "📦✨";
+                popup.style.display = 'block';
+                statusText.innerText = "ของขวัญถูกเปิดแล้ว! 💖";
+            }
+        }
+
+        // 4. ตรวจจับการยิ้ม
         async function detectSmile() {
+            if (typeof faceapi === 'undefined') return;
+
             setInterval(async () => {
                 if (!isUnlocked && isCameraStarted) {
                     const detections = await faceapi.detectAllFaces(
@@ -238,69 +231,24 @@
                         new faceapi.TinyFaceDetectorOptions()
                     ).withFaceExpressions();
 
-                    if (detections.length > 0) {
+                    if (detections && detections.length > 0) {
                         const happiness = detections[0].expressions.happy;
-                        
-                        // ถ้าค่าความสุข (Happy) เกิน 0.7 (70%)
-                        if (happiness > 0.7) {
+                        console.log("Happiness level:", happiness);
+
+                        // ปรับให้ยิ้มง่ายขึ้นที่ 0.5
+                        if (happiness > 0.5) {
                             isUnlocked = true;
                             statusText.innerText = "ปลดล็อคแล้ว! กดเปิดกล่องอีกครั้งสิ ✨";
-                            lockIcon.style.display = 'block'; // โชว์แม่กุญแจ 🔓
+                            lockIcon.style.display = 'block';
                             gift.style.transform = "scale(1.2)";
                         }
                     }
                 }
-            }, 300); // ทำซ้ำทุกๆ 0.3 วินาที
+            }, 500);
         }
 
-        // เริ่มต้นการโหลด AI
+        // เริ่มทำงาน
         init();
-    </script>async function init() {
-    // เปลี่ยนมาใช้ CDN ที่เสถียรกว่าเดิม
-    const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
-    
-    try {
-        statusText.innerText = "กำลังโหลดโมเดล AI... ✨";
-        
-        // โหลด Model ให้เสร็จก่อนทำอย่างอื่น
-        await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
-        await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
-        
-        statusText.innerText = "กดที่กล่องเพื่อเริ่มความลับ... 🎁";
-        console.log("AI Models Loaded!");
-    } catch (e) {
-        statusText.innerText = "โหลด AI ล้มเหลว กรุณารีเฟรชหน้าจอ";
-        console.error("Model Load Error:", e);
-    }
-}
-
-async function detectSmile() {
-    // เพิ่มการตรวจสอบว่า faceapi โหลดเสร็จหรือยัง
-    if (typeof faceapi === 'undefined') return;
-
-    setInterval(async () => {
-        if (!isUnlocked && isCameraStarted) {
-            // ใช้ TinyFaceDetector ตามที่โหลดมา
-            const detections = await faceapi.detectAllFaces(
-                video, 
-                new faceapi.TinyFaceDetectorOptions()
-            ).withFaceExpressions();
-
-            if (detections && detections.length > 0) {
-                const happiness = detections[0].expressions.happy;
-                console.log("Happiness level:", happiness); // ดูค่าการยิ้มใน Console
-
-                // ปรับให้ยิ้มง่ายขึ้นที่ 0.5 (50%)
-                if (happiness > 0.5) {
-                    isUnlocked = true;
-                    statusText.innerText = "ปลดล็อคแล้ว! กดเปิดกล่องอีกครั้งสิ ✨";
-                    lockIcon.style.display = 'block';
-                    gift.style.transform = "scale(1.2)";
-                }
-            }
-        }
-    }, 500); // ปรับเวลาเป็น 0.5 วินาทีต่อการสแกนเพื่อลดภาระเครื่อง
-}
+    </script>
 </body>
-
 </html>
