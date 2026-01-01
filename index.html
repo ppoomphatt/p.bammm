@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gift for You 😊</title>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-pink: #ffafcc;
+            --dark-pink: #ff8fab;
+            --soft-blue: #a2d2ff;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffe5ec 0%, #fb6f92 100%);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Kanit', sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* Video ซ่อนไว้ใช้ประมวลผล */
+        #video {
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+        }
+
+        /* ข้อความสถานะ */
+        #status-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            min-width: 280px;
+            border: 3px solid white;
+            z-index: 10;
+        }
+
+        #status-text {
+            color: var(--dark-pink);
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        /* ส่วนแสดงผลกล่องของขวัญ */
+        #gift-wrapper {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        #gift-container {
+            font-size: 150px; /* ขนาดกล่องของขวัญ */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+        }
+
+        #lock-status {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 50px;
+            display: none;
+            filter: drop-shadow(0 4px 5px rgba(0,0,0,0.2));
+            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Animation สั่น */
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            20% { transform: rotate(-15deg); }
+            40% { transform: rotate(15deg); }
+            60% { transform: rotate(-10deg); }
+            80% { transform: rotate(10deg); }
+        }
+
+        /* Popup */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            width: 85%;
+            max-width: 380px;
+            padding: 30px;
+            border-radius: 40px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+            z-index: 100;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            border: 6px solid var(--primary-pink);
+        }
+
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .flower-img { 
+            width: 200px; 
+            height: auto;
+            border-radius: 20px;
+            margin-bottom: 15px; 
+        }
+
+        .spotify-img { 
+            width: 100%; 
+            border-radius: 15px; 
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            background: var(--dark-pink);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            margin-top: 25px;
+            cursor: pointer;
+            font-family: 'Kanit';
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #ff4d6d;
+        }
+    </style>
+</head>
+<body>
+
+    <video id="video" autoplay muted playsinline></video>
+
+    <div id="status-box">
+        <p id="status-text">กำลังโหลด AI... รอสักครู่นะคะ ✨</p>
+    </div>
+
+    <div id="gift-wrapper" onclick="handleGiftClick()">
+        <div id="gift-container">🎁</div>
+        <div id="lock-status">🔓</div>
+    </div>
+
+    <div id="popup">
+        <img src="https://i.postimg.cc/FzCg2kdZ/S-25944071.jpg" class="flower-img" alt="Bouquet">
+        <h2 style="color: #ff4d6d; margin: 10px 0 0 0;">For You! 💐</h2>
+        <p style="margin-top: 5px;">ยิ้มเก่งจัง มีรางวัลมาให้ฟังค่ะ 😊</p>
+        
+        <img src="https://i.postimg.cc/PrKB5SYk/S-25944070.jpg" class="spotify-img" alt="Spotify Code">
+        
+        <br>
+        <button onclick="location.reload()">เล่นอีกรอบ</button>
+    </div>
+
+    <script>
+        let isUnlocked = false;
+        let isCameraStarted = false;
+        const video = document.getElementById('video');
+        const gift = document.getElementById('gift-container');
+        const statusText = document.getElementById('status-text');
+        const lockIcon = document.getElementById('lock-status');
+        const popup = document.getElementById('popup');
+
+        // 1. โหลด Model AI จากอินเทอร์เน็ต
+        async function init() {
+            const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights';
+            try {
+                await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+                await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
+                statusText.innerText = "กดที่กล่องเพื่อดูความลับ... 🎁";
+            } catch (e) {
+                statusText.innerText = "โหลด AI ไม่สำเร็จ กรุณารีเฟรชหน้าจอ";
+                console.error(e);
+            }
+        }
+
+        // 2. Logic เมื่อมีการกดที่กล่อง
+        function handleGiftClick() {
+            if (!isUnlocked) {
+                // เอฟเฟกต์สั่น
+                gift.classList.add('shake');
+                setTimeout(() => gift.classList.remove('shake'), 500);
+                
+                statusText.innerText = "ยิ้มหวานๆ ให้กล่องหน่อยนะ 😊";
+                
+                if (!isCameraStarted) {
+                    startCamera();
+                }
+            } else {
+                // ถ้าปลดล็อคแล้ว (ยิ้มแล้ว) กดอีกครั้งจะแสดง Popup
+                gift.innerText = "📦✨";
+                popup.style.display = 'block';
+                statusText.innerText = "ของขวัญถูกเปิดแล้ว! 💖";
+            }
+        }
+
+        // 3. ฟังก์ชันเริ่มเปิดกล้อง
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+                video.srcObject = stream;
+                isCameraStarted = true;
+                detectSmile();
+            } catch (err) {
+                statusText.innerText = "กรุณาอนุญาตให้ใช้กล้องเพื่อเล่นนะคะ";
+            }
+        }
+
+        // 4. ฟังก์ชัน AI ตรวจจับการยิ้ม
+        async function detectSmile() {
+            setInterval(async () => {
+                if (!isUnlocked && isCameraStarted) {
+                    const detections = await faceapi.detectAllFaces(
+                        video, 
+                        new faceapi.TinyFaceDetectorOptions()
+                    ).withFaceExpressions();
+
+                    if (detections.length > 0) {
+                        const happiness = detections[0].expressions.happy;
+                        
+                        // ถ้าค่าความสุข (Happy) เกิน 0.7 (70%)
+                        if (happiness > 0.7) {
+                            isUnlocked = true;
+                            statusText.innerText = "ปลดล็อคแล้ว! กดเปิดกล่องอีกครั้งสิ ✨";
+                            lockIcon.style.display = 'block'; // โชว์แม่กุญแจ 🔓
+                            gift.style.transform = "scale(1.2)";
+                        }
+                    }
+                }
+            }, 300); // ทำซ้ำทุกๆ 0.3 วินาที
+        }
+
+        // เริ่มต้นการโหลด AI
+        init();
+    </script>
+</body>
+</html>
