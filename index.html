@@ -118,7 +118,7 @@
             try {
                 await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
                 await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
-                statusText.innerText = "กดเพื่อเปิดคับ🎁";
+                statusText.innerText = "กดเปิดเลยยคับ🎁";
             } catch (e) {
                 statusText.innerText = "โหลดล้มเหลว รีเฟรชหน่อยคับ";
             }
@@ -169,5 +169,6 @@
     </script>
 </body>
 </html>
+
 
 
